@@ -2,9 +2,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # Mysql Settings
-    url: jdbc:mysql://localhost:3306/ttocket?serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://3.38.250.25:3306/ttocket?serverTimezone=UTC&characterEncoding=UTF-8
     username: ttocket
-    password: '1Q2w3e4r,'
+    password: '!23Qwe'
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -13,7 +13,7 @@ spring:
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
       use-new-id-generator-mappings: false
     properties:
       hibernate:
