@@ -216,6 +216,8 @@ public class PerformanceService {
                 .maxSeats(performance.getMax_seats())
                 .desc(performance.getDescription())
                 .etc(performance.getEtc())
+                .poster(performance.getPoster())
+                .userId(performance.getUser().getId())
                 .build();
 
         String[] seatsState = new String[performance.getMax_seats()+1];
