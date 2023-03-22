@@ -2,10 +2,47 @@ pipeline {
     agent any
 
     stages {
-        stage('Hello') {
-            steps {
-                echo 'Hello World!!'
+        stage('CLONE')
+        {
+        steps{
+            git branch : 'release-back', credentialsId : 'lancelot1672' ,url : 'https://lab.ssafy.com/s08-blockchain-nft-sub2/S08P22B210.git'
+        }
+           
+        }
+        
+        stage('BUILD')
+        {
+            steps
+            {
+            sh '''
+            cd back
+            chmod +x gradlew
+            ./gradlew clean build
+
+            '''
             }
+            
+        }
+         stage('DOCKER BUILD')
+        {
+            steps
+            {
+            sh '''
+            docker build -t ttocket/back-end:1 .
+            '''
+            }
+           
+        }
+        stage('DEPLOY')
+        {
+            steps
+            {
+            sh '''
+            docker run --name sptest-container -d -p 8081:8081 ttocket/back-end:1 
+            echo 'Success'
+            '''
+            }
+           
         }
     }
 }

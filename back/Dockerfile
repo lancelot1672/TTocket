@@ -1,5 +1,5 @@
 FROM openjdk:11-jdk
-ARG JAR_FILE=build/libs/ttocket-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=build/libs/*.jar
 
 EXPOSE 8080
 
