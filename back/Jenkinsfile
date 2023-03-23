@@ -29,7 +29,7 @@ pipeline {
             {
             sh '''
             cd /var/jenkins_home/workspace/ttocket_test/back
-            docker build -t ttocket/spring-back-end:1 .
+            docker build -t ttocket/spring-back-end:1.1 .
             '''
             }
            
