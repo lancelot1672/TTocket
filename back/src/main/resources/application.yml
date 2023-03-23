@@ -26,7 +26,6 @@ spring:
     password: '13524'
 logging:
   level:
-    root: debug
     org:
       hibernate:
         SQL: debug

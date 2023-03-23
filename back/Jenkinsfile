@@ -32,7 +32,8 @@ pipeline {
             docker rm spring-container
             echo 'Remove if spring-container exist'
 
-            cd /var/jenkins_home/workspace/ttocket_test/back
+            cd /var/jenkins_home/workspace/ttocket_spring_backend/back
+
             docker rmi ttocket/spring-back-end:1.1
             docker build -t ttocket/spring-back-end:1.1 .
             '''
@@ -46,9 +47,6 @@ pipeline {
             {
             sh '''
              
-           
-
-            
             docker run --name spring-container -d -p 8080:8080 ttocket/spring-back-end:1.1 
             echo 'Success'
             '''
