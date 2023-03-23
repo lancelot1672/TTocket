@@ -11,9 +11,9 @@ import java.util.List;
 public interface PerformanceLikeRepository extends JpaRepository<PerformanceLike, Integer>, PerformanceLikeRepositoryCustom {
 
     List<PerformanceLike> findFirstListByUserId(String userId);
-    List<PerformanceLike> findPagesByUserId(String userId);
+    List<PerformanceLike> findByUserId(String userId);
     PerformanceLike findByPerformanceIdAndUserId(int performanceId, String userId);
     PerformanceLike findByUserIdAndPerformanceId(String userId, int performanceId);
 
-    Page<PerformanceLike> findByCustom_cursorPaging(Pageable pageable, int cursorId);
+    Page<PerformanceLike> findByCustom_cursorPaging(Pageable pageable, int cursorId, String userId);
 }

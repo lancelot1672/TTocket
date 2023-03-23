@@ -1,16 +1,12 @@
 package com.ssafy.ttocket.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.ttocket.domain.Performance;
-import com.ssafy.ttocket.domain.QPerformance;
-import com.ssafy.ttocket.domain.Seat;
+import com.ssafy.ttocket.domain.*;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import javax.persistence.EntityManager;
 
-import java.util.List;
-
-import static com.ssafy.ttocket.domain.QPerformance.performance;
+import static com.ssafy.ttocket.domain.QUser.user;
 
 public class UserRepositoryImpl extends QuerydslRepositorySupport {
 

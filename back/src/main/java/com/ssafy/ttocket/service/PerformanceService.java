@@ -35,10 +35,8 @@ public class PerformanceService {
     private final RedisTemplate redisTemplate;
     @Transactional
     public ResponseDto createPerformance(PerformanceDto performanceDto) {
-
         Map<String, Object> result = new HashMap<>();
         ResponseDto responseDto = new ResponseDto();
-
         // String -> Date
         String startTimeStr = performanceDto.getStartTime();
         String endTimeStr = performanceDto.getEndTime();
@@ -50,9 +48,7 @@ public class PerformanceService {
             responseDto.setMessage("유저아이디 가입 안되어 있음");
             return responseDto;
         }
-
         User user = byId.get();
-
         // DB
         Performance performance = Performance.builder()
                 .title(performanceDto.getTitle())
@@ -66,24 +62,19 @@ public class PerformanceService {
                 .etc(performanceDto.getEtc())
                 .price(performanceDto.getPrice())
                 .build();
-
         performanceRepository.save(performance);
-        
         // 사용자 수만큼 performanceLike DB 등록
         List<User> userAll = userRepository.findAll();
         for (User anUser : userAll) {
             LikeId likeId = new LikeId(performance.getId(), anUser.getId());
-
             PerformanceLike performanceLike = PerformanceLike.builder()
                     .likeId(likeId)
                     .performance(performance)
                     .user(anUser)
                     .isLike(false)
                     .build();
-
             performanceLikeRepository.save(performanceLike);
         }
-
         // 빈 좌석 만들기
         int maxSeats = performanceDto.getMaxSeats();
         for (int i = 1; i <= maxSeats; i++) {
@@ -95,34 +86,49 @@ public class PerformanceService {
                     .build();
             seatRepository.save(seat);
         }
-
         // responseDto
         result.put("performance_id", performance.getId());
         responseDto.setMessage("공연 등록 완료");
         responseDto.setBody(result);
         responseDto.setStatusCode(200);
-
         return responseDto;
-
     }
 
     public ResponseDto homeList(String userId) {
         // 활용할 자료구조 생성
         Map<String,Object> result = new HashMap<>();
         ResponseDto responseDto = new ResponseDto();
-//        ValueOperations valueOperations = redisTemplate.opsForValue();
-//        String key = "test";
-//        valueOperations.set(key,"is the test");
 
         // DB에서 원하는 데이터 찾아오기
         List<Performance> openSoon = performanceRepository.findOpenSoon();  // 오픈 예정 : 상단 배너
         List<Performance> performSoon = performanceRepository.findPerformSoon();  // 공연 임박 리스트
         List<PerformanceLike> likePerform = performanceLikeRepository.findFirstListByUserId(userId);  // 유저가 좋아요 한 공연 리스트
+        User user = userRepository.findById(userId).get();
+        String nickname = user.getNickname();
+
+        List<PerformanceDto> likePerforms = new ArrayList<>();
+        for (PerformanceLike lp : likePerform) {
+            PerformanceDto performanceDto = PerformanceDto.builder()
+                    .title(lp.getPerformance().getTitle())
+                    .location(lp.getPerformance().getLocation())
+                    .price(lp.getPerformance().getPrice())
+                    .desc(lp.getPerformance().getDescription())
+                    .etc(lp.getPerformance().getEtc())
+                    .poster(lp.getPerformance().getPoster())
+                    .id(lp.getPerformance().getId())
+                    .userId(lp.getPerformance().getUser().getId())
+                    .startTime(String.valueOf(lp.getPerformance().getStartTime()))
+                    .endTime(String.valueOf(lp.getPerformance().getEndTime()))
+                    .maxSeats(lp.getPerformance().getMax_seats())
+                    .build();
+            likePerforms.add(performanceDto);
+        }
 
         // 찾은 데이터 result에 입력
+        result.put("user_nickname", nickname);
         result.put("open_soon", openSoon);
         result.put("perform_soon", performSoon);
-        result.put("like_performance", likePerform);
+        result.put("like_performance", likePerforms);
 
         responseDto.setMessage("홈 화면 데이터 리턴");
         responseDto.setBody(result);
@@ -172,14 +178,17 @@ public class PerformanceService {
         ResponseDto responseDto = new ResponseDto();
 
         Pageable pageable = PageRequest.of(cursorId, size);
-        Page<PerformanceLike> userlikeList = performanceLikeRepository.findByCustom_cursorPaging(pageable, cursorId);
+//        List<PerformanceLike> userlikeList = performanceLikeRepository.findByUserId(userId);
+        Page<PerformanceLike> userlikePage = performanceLikeRepository.findByCustom_cursorPaging(pageable, cursorId, userId);
         List<UserlikeDto> userlikeDtoList = new ArrayList<>();
 
-        for (PerformanceLike p : userlikeList) {
+        for (PerformanceLike p : userlikePage) {
             UserlikeDto userlikeDto = UserlikeDto.builder()
-                    .id(userId)
+                    .id(String.valueOf(p.getPerformance().getId()))
                     .title(p.getPerformance().getTitle())
                     .startTime(String.valueOf(p.getPerformance().getStartTime()))
+                    .location(p.getPerformance().getLocation())
+                    .price(p.getPerformance().getPrice())
                     .endTime(String.valueOf(p.getPerformance().getEndTime()))
                     .description(p.getPerformance().getDescription())
                     .etc(p.getPerformance().getEtc())
@@ -239,9 +248,7 @@ public class PerformanceService {
         return responseDto;
     }
 
-
     //==공연 좌석 만들고 시도==//
-//    @Transactional  // 확신이 없으니깐 공부해보고 필요할 때 사용
     public ResponseDto clickLike(String userId, int performanceId) {
         // 활용할 자료구조 생성
         boolean result;
@@ -270,11 +277,9 @@ public class PerformanceService {
         String key = "seatStatus::" + performanceId;
         ListOperations listOperations = redisTemplate.opsForList();
 
-        Performance performance = performanceRepository.findById(performanceId);
-
         if(listOperations.size(key) == 0){
             List<Seat> seats = seatRepository.findByPerformanceId(performanceId);
-            for(int i=0;i<seats.size();i++){
+            for(int i = 0; i < seats.size(); i++){
                 listOperations.rightPush(key,String.valueOf(seats.get(i).getStatus()));
             }
         }
@@ -282,7 +287,6 @@ public class PerformanceService {
 
         // 찾은 데이터 result에 입력
         result.put("seats_state", range);
-
         responseDto.setMessage("공연 좌석보기 데이터 리턴");
         responseDto.setBody(result);
         responseDto.setStatusCode(200);
@@ -297,20 +301,30 @@ public class PerformanceService {
         ListOperations listOperations = redisTemplate.opsForList();
         if(listOperations.size(key) == 0){
             List<Seat> seats = seatRepository.findByPerformanceId(performanceId);
-            for(int i=0;i<seats.size();i++){
+            for(int i=0; i<seats.size(); i++){
                 listOperations.rightPush(key,String.valueOf(seats.get(i).getStatus()));
             }
         }
-
-        if(code == 3){ // 좌석상태 PURCHASING으로 변경
+        // code 2: 예약완료
+        else if(code == 2){ // 좌석상태 RESERVED으로 변경
+            listOperations.set(key,seatId - 1,String.valueOf(SeatStatus.RESERVED));
+            result.put("isSuccess", true);
+            responseDto.setMessage(performanceId+"번 공연 "+ seatId+ "번 좌석 RESERVED으로 변경 완료");
+            responseDto.setStatusCode(200);
+            return responseDto;
+        }
+        // code 3: PURCHASING (사용자가 자리 선택 시)
+        if(code == 3){ // {비어있음, 예매후 취소, 예매 중 취소}인 좌석 선택 -> 예매중으로 변경
             String status = (String) listOperations.index(key, seatId - 1);
+            // {비어있음, 예매 중 취소}
             if(status.equals(String.valueOf(SeatStatus.EMPTY)) || status.equals(SeatStatus.PURCHASING_CANCEL)){
                 listOperations.set(key,seatId - 1,String.valueOf(SeatStatus.PURCHASING));
                 result.put("isSuccess", true);
-                result.put("beforeStatus","EMPTY");
+                result.put("beforeStatus","EMPTY");  // EMPTY & PURCHASING_CANCEL
                 responseDto.setMessage(performanceId+"번 공연 "+ seatId+ "번 좌석 PURCHASING으로 변경 완료");
                 responseDto.setStatusCode(200);
             }
+            // {예매 후 취소}
             else if(status.equals(SeatStatus.PURCHASED_CANCEL)){
                 result.put("isSuccess", true);
                 result.put("beforeStatus","CANCEL");
@@ -323,13 +337,7 @@ public class PerformanceService {
             }
             return responseDto;
         }
-        else if(code == 2){ // 좌석상태 RESERVED으로 변경
-            listOperations.set(key,seatId - 1,String.valueOf(SeatStatus.RESERVED));
-            result.put("isSuccess", true);
-            responseDto.setMessage(performanceId+"번 공연 "+ seatId+ "번 좌석 RESERVED으로 변경 완료");
-            responseDto.setStatusCode(200);
-            return responseDto;
-        }
+        // code 5: 구매완료 후 취소
         else if(code == 5){ // 좌석상태 CANCEL으로 변경
             listOperations.set(key,seatId - 1,String.valueOf(SeatStatus.PURCHASED_CANCEL));
             result.put("isSuccess", true);

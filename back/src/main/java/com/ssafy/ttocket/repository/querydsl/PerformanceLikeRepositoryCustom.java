@@ -10,5 +10,5 @@ import java.util.List;
 public interface PerformanceLikeRepositoryCustom {
 
     List<PerformanceLike> findFirstListByUserId(String userId);
-    Page<PerformanceLike> findByCustom_cursorPaging(Pageable pageable, int cursorId);  // querydsl 방식
+    Page<PerformanceLike> findByCustom_cursorPaging(Pageable pageable, int cursorId, String userId);  // querydsl 방식
 }
