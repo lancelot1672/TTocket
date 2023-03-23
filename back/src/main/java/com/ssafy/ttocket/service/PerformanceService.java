@@ -107,6 +107,9 @@ public class PerformanceService {
         String nickname = user.getNickname();
 
         List<PerformanceDto> likePerforms = new ArrayList<>();
+        List<PerformanceDto> openSoonPerforms = new ArrayList<>();
+        List<PerformanceDto> commingSoonPerforms = new ArrayList<>();
+
         for (PerformanceLike lp : likePerform) {
             PerformanceDto performanceDto = PerformanceDto.builder()
                     .title(lp.getPerformance().getTitle())
@@ -123,11 +126,42 @@ public class PerformanceService {
                     .build();
             likePerforms.add(performanceDto);
         }
-
+        for (Performance p : openSoon) {
+            PerformanceDto performanceDto = PerformanceDto.builder()
+                    .title(p.getTitle())
+                    .location(p.getLocation())
+                    .price(p.getPrice())
+                    .desc(p.getDescription())
+                    .etc(p.getEtc())
+                    .poster(p.getPoster())
+                    .id(p.getId())
+                    .userId(p.getUser().getId())
+                    .startTime(String.valueOf(p.getStartTime()))
+                    .endTime(String.valueOf(p.getEndTime()))
+                    .maxSeats(p.getMax_seats())
+                    .build();
+            openSoonPerforms.add(performanceDto);
+        }
+        for (Performance p : performSoon) {
+            PerformanceDto performanceDto = PerformanceDto.builder()
+                    .title(p.getTitle())
+                    .location(p.getLocation())
+                    .price(p.getPrice())
+                    .desc(p.getDescription())
+                    .etc(p.getEtc())
+                    .poster(p.getPoster())
+                    .id(p.getId())
+                    .userId(p.getUser().getId())
+                    .startTime(String.valueOf(p.getStartTime()))
+                    .endTime(String.valueOf(p.getEndTime()))
+                    .maxSeats(p.getMax_seats())
+                    .build();
+            commingSoonPerforms.add(performanceDto);
+        }
         // 찾은 데이터 result에 입력
         result.put("user_nickname", nickname);
-        result.put("open_soon", openSoon);
-        result.put("perform_soon", performSoon);
+        result.put("open_soon", openSoonPerforms);
+        result.put("perform_soon", commingSoonPerforms);
         result.put("like_performance", likePerforms);
 
         responseDto.setMessage("홈 화면 데이터 리턴");
@@ -180,21 +214,24 @@ public class PerformanceService {
         Pageable pageable = PageRequest.of(cursorId, size);
 //        List<PerformanceLike> userlikeList = performanceLikeRepository.findByUserId(userId);
         Page<PerformanceLike> userlikePage = performanceLikeRepository.findByCustom_cursorPaging(pageable, cursorId, userId);
-        List<UserlikeDto> userlikeDtoList = new ArrayList<>();
+        List<PerformanceDto> userlikeDtoList = new ArrayList<>();
 
         for (PerformanceLike p : userlikePage) {
-            UserlikeDto userlikeDto = UserlikeDto.builder()
-                    .id(String.valueOf(p.getPerformance().getId()))
+            PerformanceDto performanceDto = PerformanceDto.builder()
+                    .id(p.getPerformance().getId())
                     .title(p.getPerformance().getTitle())
                     .startTime(String.valueOf(p.getPerformance().getStartTime()))
                     .location(p.getPerformance().getLocation())
                     .price(p.getPerformance().getPrice())
                     .endTime(String.valueOf(p.getPerformance().getEndTime()))
-                    .description(p.getPerformance().getDescription())
                     .etc(p.getPerformance().getEtc())
+                    .poster(p.getPerformance().getPoster())
+                    .desc(p.getPerformance().getDescription())
+                    .maxSeats(p.getPerformance().getMax_seats())
                     .build();
 
-            userlikeDtoList.add(userlikeDto);
+
+            userlikeDtoList.add(performanceDto);
         }
 
         result.put("user_like_list", userlikeDtoList);

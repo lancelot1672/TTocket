@@ -17,6 +17,7 @@ public class UserlikeDto {
     @JsonProperty("end_time")
     private String endTime;
     private String location;
+    private String poster;
     private double price;
     @JsonProperty("max_seats")
     private int maxSeats;
