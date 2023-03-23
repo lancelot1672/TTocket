@@ -3,7 +3,6 @@ package com.ssafy.ttocket.repository.querydsl;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.ttocket.domain.PerformanceLike;
 import com.ssafy.ttocket.domain.QPerformanceLike;
-import com.ssafy.ttocket.domain.QUser;
 import com.ssafy.ttocket.repository.PerformanceLikeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,11 +30,10 @@ public class PerformanceLikeRepositoryImpl extends QuerydslRepositorySupport imp
     }
 
     @Override
-    public Page<PerformanceLike> findByCustom_cursorPaging(Pageable pageable, int cursorId, String userId) {
+    public Page<PerformanceLike> findByCustom_cursorPaging(Pageable pageable, int cursorId) {
 
         List<PerformanceLike> performanceLikeList = queryFactory
                 .selectFrom(qPerformanceLike)
-                .where(qPerformanceLike.isLike.eq(Boolean.TRUE).and(qPerformanceLike.user.id.eq(userId)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
