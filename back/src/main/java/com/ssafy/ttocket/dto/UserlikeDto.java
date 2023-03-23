@@ -9,7 +9,6 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class UserlikeDto {
-    @JsonProperty("user_id")
     private String id;
     private String title;
     @JsonProperty("start_time")
@@ -17,7 +16,7 @@ public class UserlikeDto {
     @JsonProperty("end_time")
     private String endTime;
     private String location;
-    private double price;
+    private int price;
     @JsonProperty("max_seats")
     private int maxSeats;
     private String description;
