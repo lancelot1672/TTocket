@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class PerformanceDto {
-    @JsonProperty("performance_id")
     private int id;
     @JsonProperty("user_id")
     private String userId;
