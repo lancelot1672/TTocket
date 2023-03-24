@@ -26,7 +26,11 @@ public class PerformanceController {
         ResponseDto responseDto = performanceService.homeList(userId);
         return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
     }
-
+    @PostMapping("/test") // 공연
+    public String test(){
+        log.info("POST: /test");
+        return "돼라ㅋ";
+    }
     @PostMapping("/create") // 파티 만들기
     public ResponseEntity<ResponseDto> performanceCreate(@RequestBody PerformanceDto performanceDto) {
         log.info("POST: /create");
