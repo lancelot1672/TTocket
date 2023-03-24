@@ -9,6 +9,7 @@ spring:
     url: jdbc:mysql://3.38.250.25:3306/ttocket?serverTimezone=UTC&characterEncoding=UTF-8
     username: ttocket
     password: '!23Qwe'
+
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
