@@ -26,7 +26,7 @@ public class PerformanceLikeRepositoryImpl extends QuerydslRepositorySupport imp
     public List<PerformanceLike> findFirstListByUserId(String userId) {
         return queryFactory.selectFrom(qPerformanceLike)
                 .where(qPerformanceLike.user.id.eq(userId))
-                .offset(5)
+                .limit(10)
                 .fetch();
     }
 
