@@ -2,16 +2,14 @@ package com.ssafy.ttocket.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.ttocket.domain.Performance;
-import com.ssafy.ttocket.domain.PerformanceLike;
 import com.ssafy.ttocket.domain.QPerformance;
-import com.ssafy.ttocket.repository.PerformanceLikeRepository;
-import com.ssafy.ttocket.repository.PerformanceRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.ssafy.ttocket.domain.QPerformance.performance;
@@ -30,15 +28,18 @@ public class PerformanceRepositoryImpl extends QuerydslRepositorySupport impleme
     public List<Performance> findOpenSoon() {
         return queryFactory
                 .selectFrom(performance)
-                .offset(10)
+                .where(performance.startTime.gt(LocalDateTime.now()))
+                .orderBy(performance.startTime.asc())
+                .limit(10)
                 .fetch();
     }
     @Override
     public List<Performance> findPerformSoon() {
         return queryFactory
                 .selectFrom(qPerformance)
-                .orderBy(qPerformance.endTime.desc())
-                .offset(10)
+                .where(performance.endTime.gt(LocalDateTime.now()))
+                .orderBy(performance.endTime.asc())
+                .limit(10)
                 .fetch();
     }
 
@@ -47,6 +48,8 @@ public class PerformanceRepositoryImpl extends QuerydslRepositorySupport impleme
 
         List<Performance> performanceList = queryFactory
                 .selectFrom(performance)
+                .where(performance.endTime.gt(LocalDateTime.now()))
+                .orderBy(performance.endTime.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
