@@ -28,8 +28,8 @@ public class UserService {
             responseDto.setStatusCode(400);
         }
         else{
-            result.put("nickname",byId.get().getNickname());
             responseDto.setMessage("기존 유저");
+            responseDto.setBody(byId.get().getNickname());
             responseDto.setStatusCode(200);
         }
         return responseDto;
