@@ -18,6 +18,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -32,6 +33,7 @@ public class PerformanceService {
     private final UserRepository userRepository;
     private final TimeService timeService;
     private final RedisTemplate redisTemplate;
+    static int seatRowNums = 8;
 
     public ResponseDto performanceDetail(String userId, int performanceId) {
         // 활용할 자료구조 생성
@@ -63,23 +65,6 @@ public class PerformanceService {
                 .poster(performance.getPoster())
                 .userId(performance.getUser().getId())
                 .build();
-
-
-        // 좌석 수정 중
-//        System.out.println("seats = " + seats);
-//        int maxSeat = performance.getMax_seats();
-//        System.out.println("maxSeat/8 = " + maxSeat/8);
-//
-//        ArrayList seatList = new ArrayList();
-//        for (int i = 0; i < maxSeat/8+1; i++) {
-//            SeatStatus[] seatRow = new SeatStatus[8];
-//            for (int j = 0; j < 8; j++) {
-//                seatRow[j] = seats.get(i+j).getStatus();
-//            }
-//            seatList.add(seatRow);
-//        }
-        //
-
 
         String[] seatsState = new String[performance.getMax_seats()];
         for (Seat seat : seats) {
@@ -151,12 +136,35 @@ public class PerformanceService {
         }
         List range = listOperations.range(key, 0, -1);
 
+        int idx = 0;
+        Long listSize = listOperations.size(key)/8;
+        ArrayList<ArrayList> arrayList1 = new ArrayList<>();
+
+        for (int i = 0; i < listSize+1; i++) {
+            if (i == listSize) {
+                if (listOperations.size(key) % seatRowNums != 0) {
+                    ArrayList<String> arrayList2 = new ArrayList<>();
+                    for (int j = 0; j < listOperations.size(key) % seatRowNums; j++) {
+                        arrayList2.add((String) range.get(idx++));
+                    }
+                    arrayList1.add(arrayList2);
+                }
+            } else {
+                ArrayList<String> arrayList2 = new ArrayList<>();
+                for (int j = 0; j < seatRowNums; j++) {
+                    arrayList2.add((String) range.get(idx++));
+                }
+                arrayList1.add(arrayList2);
+            }
+        }
+        System.out.println("arrayList1 = " + arrayList1);
+
         // 공연 정보 가져오기
         Performance perform = performanceRepository.findById(performanceId);
-        log.debug("reservationState - performance : {}",perform.toString());
+        log.debug("reservationState - performance : {}", perform.toString());
 
         // 찾은 데이터 result에 입력
-        result.put("seats_state", range);
+        result.put("seats_state", arrayList1);
         result.put("perform", perform);
 
         responseDto.setMessage("공연 좌석보기 데이터 리턴");
