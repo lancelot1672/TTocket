@@ -28,6 +28,7 @@ public class RedisConfig {
                 .sentinel(host,26379)
                 .sentinel(host,26380)
                 .sentinel(host,26381);
+        sentinelConfiguration.setPassword(password);
         return new LettuceConnectionFactory(sentinelConfiguration);
     }
     @Bean
