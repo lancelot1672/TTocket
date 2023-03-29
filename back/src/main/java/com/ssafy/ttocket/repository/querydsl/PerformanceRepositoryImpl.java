@@ -61,4 +61,12 @@ public class PerformanceRepositoryImpl extends QuerydslRepositorySupport impleme
 
         return new PageImpl<>(performanceList, pageable, total);
     }
+
+    @Override
+    public List<Performance> findByCreatedUserId(String userId) {
+        return queryFactory
+                .selectFrom(performance)
+                .where(performance.user.id.eq(userId))
+                .fetch();
+    }
 }

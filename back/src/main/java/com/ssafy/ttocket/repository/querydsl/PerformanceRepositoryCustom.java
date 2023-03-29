@@ -10,4 +10,5 @@ public interface PerformanceRepositoryCustom {
     List<Performance> findOpenSoon();
     List<Performance> findPerformSoon();
     Page<Performance> findByCustom_cursorPaging(Pageable pageable, int cursorId);
+    List<Performance> findByCreatedUserId(String userId);
 }

@@ -12,4 +12,5 @@ import java.util.List;
 
 public interface PerformanceRepository extends JpaRepository<Performance, Integer>, PerformanceRepositoryCustom {
     Performance findById(int id);
+    List<Performance> findByCreatedUserId(String userId);
 }
