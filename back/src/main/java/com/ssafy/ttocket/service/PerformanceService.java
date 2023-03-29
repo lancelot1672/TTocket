@@ -247,11 +247,23 @@ public class PerformanceService {
             result.put("isSuccess", true);
             responseDto.setMessage(performanceId+"번 공연 "+ seatId+ "번 좌석 CANCEL으로 변경 완료");
             responseDto.setStatusCode(200);
-            System.out.println("canceledSeatList = " + canceledSeatList);
+            log.debug("canceldSeatList=", canceledSeatList);
             return responseDto;
         }
         responseDto.setMessage("code 확인해주세요");
         responseDto.setStatusCode(400);
+        return responseDto;
+    }
+
+    public ResponseDto userCreatedList(String userId) {
+        Map<String,Object> result = new HashMap<>();
+        ResponseDto responseDto = new ResponseDto();
+        List<Performance> userCreatedList = performanceRepository.findByCreatedUserId(userId);
+
+        result.put("user_created_list", userCreatedList);
+        responseDto.setBody(result);
+        responseDto.setMessage("유저가 생성한 공연 목록");
+        responseDto.setStatusCode(200);
         return responseDto;
     }
 }
