@@ -95,7 +95,14 @@ public class PerformanceListService {
         List<Performance> openSoon = performanceRepository.findOpenSoon();  // 오픈 예정 : 상단 배너
         List<Performance> performSoon = performanceRepository.findPerformSoon();  // 공연 임박 리스트
         List<PerformanceLike> likePerform = performanceLikeRepository.findFirstListByUserId(userId);  // 유저가 좋아요 한 공연 리스트
-        User user = userRepository.findById(userId).get();
+
+        Optional<User> byId = userRepository.findById(userId);
+        if(byId.isEmpty()){
+            responseDto.setStatusCode(400);
+            responseDto.setMessage("유저아이디 가입 안되어 있음");
+            return responseDto;
+        }
+        User user = byId.get();
         String nickname = user.getNickname();
 
         List<PerformanceDto> likePerforms = new ArrayList<>();
