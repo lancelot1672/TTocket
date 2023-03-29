@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -24,14 +23,12 @@ public class SchedulerService {
     private final RedisTemplate redisTemplate;
     private final SeatRepository seatRepository;
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 180000)
     @Transactional
     public void changeSeatsStatus() {
-        log.debug("SchedulerService.changeSeatsStatus 실행");
-
+        log.debug("매 3분마다 스케줄러 실행");
         ListOperations listOperations = redisTemplate.opsForList();
         // 람다식 적용 방법 찾아서 적용하기
-
         Set<String> keys = redisTemplate.keys("seatStatus::*");
         for (String key : keys) {
             String keyIdx = key.substring(12);  // performanceId 추출
