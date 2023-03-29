@@ -15,7 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
 
 @Service
@@ -71,8 +73,13 @@ public class PerformanceListService {
                     .build();
             seatRepository.save(seat);
         }
+        //공연까지 몇분 남았는지 계산
+        LocalDateTime nowTime = LocalDateTime.now();
+        Duration duration = Duration.between(nowTime,endTime);
+        log.info("공연까지 남은 분 : ",duration.toMinutes());
         // responseDto
         result.put("performance_id", performance.getId());
+        result.put("left_minute_perform",duration.toMinutes());
         responseDto.setMessage("공연 등록 완료");
         responseDto.setBody(result);
         responseDto.setStatusCode(200);
