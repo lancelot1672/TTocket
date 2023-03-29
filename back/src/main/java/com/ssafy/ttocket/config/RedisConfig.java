@@ -3,6 +3,7 @@ package com.ssafy.ttocket.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -19,15 +20,16 @@ public class RedisConfig {
 
     @Value("${spring.redis.password}")
     private String password;
-    @Bean
-    public LettuceConnectionFactory redisConnectionFactory() {
-        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory();
-        lettuceConnectionFactory.setHostName(host);
-        lettuceConnectionFactory.setPort(port);
-        lettuceConnectionFactory.setPassword(password);
-        return lettuceConnectionFactory;
-    }
 
+    @Bean
+    public LettuceConnectionFactory redisConnectionFactory(){
+        RedisSentinelConfiguration sentinelConfiguration = new RedisSentinelConfiguration()
+                .master("mymaster")
+                .sentinel(host,26379)
+                .sentinel(host,26380)
+                .sentinel(host,26381);
+        return new LettuceConnectionFactory(sentinelConfiguration);
+    }
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
