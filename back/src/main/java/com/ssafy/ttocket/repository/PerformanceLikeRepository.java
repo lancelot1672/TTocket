@@ -15,6 +15,5 @@ public interface PerformanceLikeRepository extends JpaRepository<PerformanceLike
     List<PerformanceLike> findByUserId(String userId);
     Optional<PerformanceLike> findByPerformanceIdAndUserId(int performanceId, String userId);
     PerformanceLike findByUserIdAndPerformanceId(String userId, int performanceId);
-
     Page<PerformanceLike> findByCustom_cursorPaging(Pageable pageable, int cursorId, String userId);
 }

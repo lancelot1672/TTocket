@@ -211,7 +211,6 @@ public class PerformanceListService {
         ResponseDto responseDto = new ResponseDto();
 
         Pageable pageable = PageRequest.of(cursorId, size);
-//        List<PerformanceLike> userlikeList = performanceLikeRepository.findByUserId(userId);
         Page<PerformanceLike> userlikePage = performanceLikeRepository.findByCustom_cursorPaging(pageable, cursorId, userId);
         List<PerformanceDto> userlikeDtoList = new ArrayList<>();
 

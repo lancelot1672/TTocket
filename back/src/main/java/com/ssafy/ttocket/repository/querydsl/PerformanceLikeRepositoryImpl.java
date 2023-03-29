@@ -35,7 +35,9 @@ public class PerformanceLikeRepositoryImpl extends QuerydslRepositorySupport imp
 
         List<PerformanceLike> performanceLikeList = queryFactory
                 .selectFrom(qPerformanceLike)
-                .where(qPerformanceLike.isLike.eq(Boolean.TRUE).and(qPerformanceLike.user.id.eq(userId)))
+                .where(qPerformanceLike.isLike.eq(Boolean.TRUE)
+                        .and(qPerformanceLike.user.id.eq(userId))
+                        .and(qPerformanceLike.isLike.eq(Boolean.TRUE)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
