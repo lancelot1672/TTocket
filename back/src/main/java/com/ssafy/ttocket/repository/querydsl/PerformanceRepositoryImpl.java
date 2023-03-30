@@ -38,6 +38,7 @@ public class PerformanceRepositoryImpl extends QuerydslRepositorySupport impleme
         return queryFactory
                 .selectFrom(qPerformance)
                 .where(performance.endTime.gt(LocalDateTime.now()))
+                .where(performance.startTime.lt(LocalDateTime.now()))
                 .orderBy(performance.endTime.asc())
                 .limit(10)
                 .fetch();
