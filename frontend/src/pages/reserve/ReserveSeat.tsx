@@ -72,7 +72,7 @@ function ReserveSeat() {
 
   return (
     <div>
-      <BackNav/>
+      <BackNav url={"/perform"}/>
       <div className="m-2">
         <p className="text-xl font-bold">
           {performInfo.title ? performInfo.title : ""}

@@ -36,7 +36,7 @@ function ReserveFail() {
             
                 <p className="mt-2 text-center">예매 실패</p>
                 <div className="flex my-4">
-                    <Link className="px-8 py-1 mx-auto mt-4 text-xl font-bold text-white bg-ttokPink rounded-xl" to="/home">다시 예매하기</Link>
+                    <Link className="px-8 py-1 mx-auto mt-4 text-xl font-bold text-white bg-ttokPink rounded-xl" to="/reserve" state={location.state.performId}>다시 예매하기</Link>
                 </div>
             </div>
         </div>

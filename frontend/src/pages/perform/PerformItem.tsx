@@ -71,7 +71,7 @@ function PerformItem() {
 
   return (
     <div className="flex flex-col content-center">
-      <BackNav />
+      <BackNav  url={"/perform"}/>
       <div className="overflow-scroll mb-20">
         {performData && (
           <div>

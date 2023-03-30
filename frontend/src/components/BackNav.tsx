@@ -1,10 +1,14 @@
 import { useNavigate } from "react-router-dom";
-function BackNav() {
+
+interface destination {
+  url : string
+}
+function BackNav({url} : destination) {
   const navigate = useNavigate();
 
   //뒤로가기 버튼
   const handleGoBack = () => {
-    navigate(-1);
+    navigate(url);
   };
 
   return (

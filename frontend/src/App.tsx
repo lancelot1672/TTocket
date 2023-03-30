@@ -8,6 +8,7 @@ import Reserve from "./pages/reserve/Reserve";
 import Box from "./pages/box/Box";
 import Ticket from "./pages/ticket/Ticket";
 import Sponsor from "./pages/sponsor/Sponsor";
+import QRReader from "./pages/qr/QRReader";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/reserve/*" element={<Reserve />}></Route>
           <Route path="/box/*" element={<Box />}></Route>
           <Route path="/sponsor/*" element={<Sponsor />}></Route>
+          <Route path="/qr/*" element={<QRReader />}></Route>
 
           {/* 상단에 위치하는 라우트들의 규칙을 모두 확인, 일치하는 라우트가 없는경우 처리 */}
           <Route path="*" element={<NotFound />}></Route>
