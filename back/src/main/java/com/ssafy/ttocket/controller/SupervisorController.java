@@ -24,7 +24,7 @@ public class SupervisorController {
 
     @GetMapping("/list/{userId}")
     public ResponseEntity<ResponseDto> list(@PathVariable String userId) {
-        log.debug("GET: /supervisor/list/{userId}m userId:{}", userId);
+        log.debug("내가 만든 공연 목록 요청 GET: /supervisor/list/{userId}m userId:{}", userId);
         ResponseDto responseDto = performanceService.userCreatedList(userId);
         return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
     }

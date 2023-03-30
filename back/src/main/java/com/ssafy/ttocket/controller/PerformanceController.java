@@ -37,7 +37,7 @@ public class PerformanceController {
     })
     @GetMapping("/home/{userId}")
     public ResponseEntity<ResponseDto> home(@ApiParam(value = "유저 ID") @PathVariable String userId){
-        log.debug("GET: /home/{userId}, userId:{}", userId);
+        log.debug("유저 공연 전 티켓 목록 요청 GET: /home/{userId}, userId:{}", userId);
         ResponseDto responseDto = performanceListService.homeList(userId);
         return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
     }
@@ -49,7 +49,7 @@ public class PerformanceController {
     })
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> performanceCreate(@ApiParam(value = "공연 DTO") @RequestBody @Valid PerformanceDto performanceDto) {
-        log.debug("POST: /create");
+        log.debug("공연 생성 요청 POST: /create");
         ResponseDto responseDto = performanceListService.createPerformance(performanceDto);
         return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
     }
@@ -61,7 +61,7 @@ public class PerformanceController {
     })
     @GetMapping(value = {"/list/{cursorId}", "/list"})  // 전체 공연 목록
     public ResponseEntity<ResponseDto> performanceList(@ApiParam(value = "커서 ID") @PathVariable(required = false) Integer cursorId) {
-        log.debug("GET: /list/cursorId, cursorId:{}", cursorId);
+        log.debug("전체 공연 목록 요청 GET: /list/cursorId, cursorId:{}", cursorId);
         if (cursorId == null) {
             cursorId = 0;
         }
@@ -77,7 +77,7 @@ public class PerformanceController {
     @GetMapping(value = {"/likelist/{userId}/{cursorId}", "/likelist/{userId}"})
     public ResponseEntity<ResponseDto> userlikeList(@ApiParam(value = "유저 ID") @PathVariable String userId,
                                                     @ApiParam(value = "커서 ID") @PathVariable(required = false) Integer cursorId) {
-        log.debug("GET: /likelist/{userId}/{curosrId}, userId: {}, cursorId: {}", userId, cursorId);
+        log.debug("찜 공연 목록 요청 GET: /likelist/{userId}/{curosrId}, userId: {}, cursorId: {}", userId, cursorId);
         if (cursorId == null) {
             cursorId  = 0;
         }
@@ -93,7 +93,7 @@ public class PerformanceController {
     @GetMapping("/{userId}/{performanceId}")  // 공연 설명 상세보기
     public ResponseEntity<ResponseDto> performanceDetail(@ApiParam(value = "유저 ID") @PathVariable String userId,
                                                          @ApiParam(value = "공연 ID") @PathVariable Integer performanceId) {
-        log.debug("GET: /{userId}/{performanceId}, userId:{}, performanceId:{}", userId, performanceId);
+        log.debug("공연 상세보기 요청 GET: /{userId}/{performanceId}, userId:{}, performanceId:{}", userId, performanceId);
         ResponseDto responseDto = performanceService.performanceDetail(userId, performanceId);
         return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
     }
@@ -106,7 +106,7 @@ public class PerformanceController {
     @PutMapping("/like/{userId}/{performanceId}")  // 좋아요 클릭
     public ResponseEntity<ResponseDto> clickLike(@ApiParam(value = "유저 ID") @PathVariable String userId,
                                                  @ApiParam(value = "공연 ID") @PathVariable int performanceId) {
-        log.debug("PUT: /like/{userId}/{performanceId}, userId:{}, performanceId:{}", userId, performanceId);
+        log.debug("공연 좋아요 클릭 요청 PUT: /like/{userId}/{performanceId}, userId:{}, performanceId:{}", userId, performanceId);
         ResponseDto responseDto = performanceService.clickLike(userId, performanceId);
         return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
     }
@@ -118,7 +118,7 @@ public class PerformanceController {
     })
     @GetMapping("/reserve/{performanceId}")  // 공연 상세보기에서 예매하기 버튼 클릭
     public ResponseEntity<ResponseDto> performanceReservation(@ApiParam(value = "공연 ID") @PathVariable int performanceId) {
-        log.debug("GET: /reserve/{performanceId}, performanceId:{}", performanceId);
+        log.debug("공연 좌석 별 상태 요청 GET: /reserve/{performanceId}, performanceId:{}", performanceId);
         ResponseDto responseDto = performanceService.reservationState(performanceId);
         return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
     }
@@ -133,7 +133,7 @@ public class PerformanceController {
                                                               @ApiParam(value = "좌석 번호") @PathVariable int seatId,
                                                               @ApiParam(value = "전송 상태 코드") @PathVariable int code)
                                                                 throws RedisConnectionFailureException {
-        log.debug("PUT: /{performance}/{seatId}/{code}, performance: {}, seatId:{}, code:{}", performanceId, seatId, code);
+        log.debug("좌석 선택 요청 PUT: /{performance}/{seatId}/{code}, performance: {}, seatId:{}, code:{}", performanceId, seatId, code);
         ResponseDto responseDto = performanceService.changeReservationState(performanceId, seatId, code);
         return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
     }

@@ -20,14 +20,14 @@ public class UserController {
 
     @GetMapping("/check/{userId}")
     public ResponseEntity<ResponseDto> checkUser(@PathVariable String userId){
-        log.info("GET: /{userId} ", userId);
+        log.info("지갑 계정 등록 여부 요청 GET: /{userId} ", userId);
         ResponseDto responseDto = userService.checkUser(userId);
         return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
     }
 
     @GetMapping("/make/{userId}/{nickname}")
     public ResponseEntity<ResponseDto> makeUser(@PathVariable String userId, @PathVariable String nickname){
-        log.info("GET: /{userId}/{nickname} ", userId, nickname);
+        log.info("지갑 계정 닉네임 등록 요청 GET: /{userId}/{nickname} ", userId, nickname);
         ResponseDto responseDto = userService.makeUser(userId,nickname);
         return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
     }
