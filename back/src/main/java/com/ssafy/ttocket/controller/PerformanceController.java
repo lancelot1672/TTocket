@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -130,7 +131,8 @@ public class PerformanceController {
     @PutMapping("/{performanceId}/{seatId}/{code}")  // 좌석 상태 변경
     public ResponseEntity<ResponseDto> performanceReservation(@ApiParam(value = "공연 ID") @PathVariable int performanceId,
                                                               @ApiParam(value = "좌석 번호") @PathVariable int seatId,
-                                                              @ApiParam(value = "전송 상태 코드") @PathVariable int code) {
+                                                              @ApiParam(value = "전송 상태 코드") @PathVariable int code)
+                                                                throws RedisConnectionFailureException {
         log.debug("PUT: /{performance}/{seatId}/{code}, performance: {}, seatId:{}, code:{}", performanceId, seatId, code);
         ResponseDto responseDto = performanceService.changeReservationState(performanceId, seatId, code);
         return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);

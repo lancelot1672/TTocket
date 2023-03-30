@@ -43,8 +43,8 @@ public class PerformanceService {
         // DB에서 원하는 데이터 찾아오기
         Performance performance = performanceRepository.findById(performanceId);
         PerformanceLike performanceLike = performanceLikeRepository.findByUserIdAndPerformanceId(userId, performanceId);
-        List<Seat> seats = seatRepository.findByPerformanceId(performanceId);
 
+        // 공연 좋아요 체크
         if (performanceLike == null || performanceLike.isLike() == false) {
             isLike = false;
         } else {
@@ -65,12 +65,6 @@ public class PerformanceService {
                 .userId(performance.getUser().getId())
                 .build();
 
-        String[] seatsState = new String[performance.getMax_seats()];
-        for (Seat seat : seats) {
-            int seatNo = seat.getSeatId().getSeatNo();
-            seatsState[seatNo-1] = String.valueOf(seat.getStatus());
-        }
-
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime startTime = LocalDateTime.parse(performanceDto.getStartTime());
         LocalDateTime endTime = LocalDateTime.parse(performanceDto.getEndTime());
@@ -86,11 +80,9 @@ public class PerformanceService {
         }
 
         // 찾은 데이터 result에 입력
-//        result.put("seatList", seatList);
         result.put("canReserve", canReserve);
         result.put("performance_dto", performanceDto);
         result.put("is_user_like", isLike);
-        result.put("seats_state", seatsState);
 
         // response 형식에 맞게 메시지, result, 상태코드 리턴
         // 물론 중간중간 원하는 동작 안될시 데이터 넣지 말고 상태코드 다르게 해서 리턴
@@ -99,7 +91,6 @@ public class PerformanceService {
         responseDto.setStatusCode(200);
         return responseDto;
     }
-
     //==공연 좌석 만들고 시도==//
     public ResponseDto clickLike(String userId, int performanceId) {
 
@@ -196,11 +187,14 @@ public class PerformanceService {
                 listOperations.rightPush(key,String.valueOf(seats.get(i).getStatus()));
             }
         }
-        else if (code == 7) {
+
+        // cf. if절 정리 필요 //
+        if (code == 7) {
             listOperations.set(key,seatId - 1,String.valueOf(SeatStatus.EMPTY));
             result.put("isSuccess", true);
             responseDto.setMessage(performanceId+"번 공연 "+ seatId+ "번 좌석 EMPTY으로 변경 완료");
             responseDto.setStatusCode(200);
+
             return responseDto;
         }
 
@@ -213,7 +207,7 @@ public class PerformanceService {
             return responseDto;
         }
         // code 3: PURCHASING (사용자가 자리 선택 시)
-        if(code == 3){ // {비어있음, 예매후 취소, 예매 중 취소}인 좌석 선택 -> 예매중으로 변경
+        if(code == 3){ // 예매 중으로 변경 <- {비어있음, 예매후 취소, 예매 중 취소}인 좌석 선택
             String status = (String) listOperations.index(key, seatId - 1);
             log.debug("changeReservationState - SeatStatus : {}", status);
 
@@ -224,6 +218,7 @@ public class PerformanceService {
                 result.put("beforeStatus","EMPTY");  // EMPTY & PURCHASING_CANCEL
                 responseDto.setMessage(performanceId+"번 공연 "+ seatId+ "번 좌석 PURCHASING으로 변경 완료");
                 responseDto.setStatusCode(200);
+
             }
             // {예매 후 취소}
             else if(status.equals(String.valueOf(SeatStatus.PURCHASED_CANCEL))){
@@ -247,7 +242,11 @@ public class PerformanceService {
             result.put("isSuccess", true);
             responseDto.setMessage(performanceId+"번 공연 "+ seatId+ "번 좌석 CANCEL으로 변경 완료");
             responseDto.setStatusCode(200);
-            log.debug("canceldSeatList=", canceledSeatList);
+
+            // canceledSeatsList에 기록
+            listOperations.rightPush("canceledSeatsList", performanceId+":"+seatId);
+            log.debug("구매완료 후 취소, canceledSeatslist에 취소된 '공연::좌석' 등록");
+
             return responseDto;
         }
         responseDto.setMessage("code 확인해주세요");

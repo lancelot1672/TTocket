@@ -29,3 +29,9 @@ logging:
   level:
     com.ssafy.ttocket: DEBUG
 
+notification:
+  mattermost:
+    enabled: true
+    webhook-url: https://meeting.ssafy.com/hooks/5b4zrggtx3y6ugjoo9b9wwggje
+    pretext: Spring 에서 Error 발생
+    author-name: TTocket

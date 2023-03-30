@@ -2,6 +2,7 @@ package com.ssafy.ttocket.service;
 
 import com.querydsl.core.types.dsl.EnumPath;
 import com.ssafy.ttocket.domain.Seat;
+import com.ssafy.ttocket.domain.SeatId;
 import com.ssafy.ttocket.domain.SeatStatus;
 import com.ssafy.ttocket.repository.SeatRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.ObjectError;
 
 import java.util.List;
 import java.util.Set;
@@ -23,11 +25,34 @@ public class SchedulerService {
     private final RedisTemplate redisTemplate;
     private final SeatRepository seatRepository;
 
-    @Scheduled(fixedRate = 180000)
+    @Scheduled(fixedRate = 30000)
     @Transactional
     public void changeSeatsStatus() {
-        log.debug("매 3분마다 스케줄러 실행");
+        log.debug("CanceledSeat 반영 : 30초");
         ListOperations listOperations = redisTemplate.opsForList();
+
+        //==취소 표를 레디스 canceledList에 등록, 스케줄러 실행 시에 MySQL 정보 업데이트==//
+        String canceledList = "canceledSeatsList";
+        Long size = listOperations.size(canceledList);
+        for (int i = 0; i < size; i++) {
+            List<String> canceledSeats = redisTemplate.opsForList().range(canceledList, 0, -1);
+            for (String canceledSeat : canceledSeats) {
+                int performanceId = Integer.parseInt(canceledSeat.substring(0, 1));
+                int seat_no = Integer.parseInt(canceledSeat.substring(canceledSeat.indexOf(":") + ":".length()));
+
+                String key = "seatStatus::" + performanceId;
+                listOperations.set(key, seat_no-1, SeatStatus.PURCHASED_CANCEL.toString());
+            }
+        }
+        redisTemplate.delete(canceledList);
+    }
+
+    @Scheduled(fixedRate = 60000)
+    @Transactional
+    public void backUpToRDB() {
+        log.debug("Cache -> RDB BackUp : 1분");
+        ListOperations listOperations = redisTemplate.opsForList();
+        // 클래스 나눠서 시간대를 길게 매서드
         // 람다식 적용 방법 찾아서 적용하기
         Set<String> keys = redisTemplate.keys("seatStatus::*");
         for (String key : keys) {
@@ -49,4 +74,5 @@ public class SchedulerService {
             }
         }
     }
+    
 }
