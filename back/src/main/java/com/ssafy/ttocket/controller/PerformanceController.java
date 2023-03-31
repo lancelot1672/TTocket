@@ -1,5 +1,6 @@
 package com.ssafy.ttocket.controller;
 
+import com.ssafy.ttocket.dto.EnterInputDto;
 import com.ssafy.ttocket.dto.PerformanceDto;
 import com.ssafy.ttocket.dto.ResponseDto;
 import com.ssafy.ttocket.service.PerformanceListService;
@@ -135,6 +136,20 @@ public class PerformanceController {
                                                                 throws RedisConnectionFailureException {
         log.debug("좌석 선택 요청 PUT: /{performance}/{seatId}/{code}, performance: {}, seatId:{}, code:{}", performanceId, seatId, code);
         ResponseDto responseDto = performanceService.changeReservationState(performanceId, seatId, code);
+        return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/enter")
+    public ResponseEntity<ResponseDto> CreateEnterLog(@RequestBody @Valid EnterInputDto enterInputDto){
+        log.debug("공연 입장 체크 / 등록 POST: /{performance}/{seatId}/{code}, performanceId: {}, seatNum:{}, nickname:{}", enterInputDto.getPerformId(), enterInputDto.getSeatNum(), enterInputDto.getNickname());
+        ResponseDto responseDto = performanceService.createEnterLog(enterInputDto);
+        return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/log/{performanceId}")
+    public ResponseEntity<ResponseDto> EnterLogList(@PathVariable int performanceId){
+        log.debug("공연 입장 로그 목록 GET: /log/{performance}, performanceId: {}", performanceId);
+        ResponseDto responseDto = performanceService.EnterLogList(performanceId);
         return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
     }
 }

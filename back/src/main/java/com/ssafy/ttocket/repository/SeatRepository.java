@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface SeatRepository extends JpaRepository<Seat, SeatId> {
     List<Seat> findByPerformanceId(int performanceId);
-    Seat findByPerformanceIdAndSeatId(int performanceId, SeatId seatId);
 }
