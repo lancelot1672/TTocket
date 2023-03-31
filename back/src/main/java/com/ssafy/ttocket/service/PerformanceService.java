@@ -32,7 +32,8 @@ public class PerformanceService {
     private final EnterLogRepository enterLogRepository;
     private final TimeService timeService;
     private final RedisTemplate redisTemplate;
-    static int seatRowNums = 8;
+    static final int seatRowNums = 8;
+    static final int GapQRTime = 15;
     public ArrayList<String> canceledSeatList = new ArrayList<>();
 
     public ResponseDto performanceDetail(String userId, int performanceId) {
@@ -273,11 +274,29 @@ public class PerformanceService {
     public ResponseDto createEnterLog(EnterInputDto enterInputDto) {
         Map<String,Object> result = new HashMap<>();
         ResponseDto responseDto = new ResponseDto();
-        int performanceId = enterInputDto.getPerformId();
-        int seatNum = enterInputDto.getSeatNum();
+        String timeQR1 = enterInputDto.getTimeQR();
+        LocalDateTime timeQR = LocalDateTime.of(Integer.parseInt(timeQR1.substring(0,4)),
+                Integer.parseInt(timeQR1.substring(5,7)),
+                Integer.parseInt(timeQR1.substring(8,10)),
+                Integer.parseInt(timeQR1.substring(11,13)),
+                Integer.parseInt(timeQR1.substring(14,16)),
+                Integer.parseInt(timeQR1.substring(17)));
+
+        Duration duration = Duration.between(timeQR,LocalDateTime.now());
+        if(duration.toSeconds() > GapQRTime){
+            result.put("isSuccess", false);
+            responseDto.setBody(result);
+            responseDto.setMessage("만료된 QR코드입니다. 다시 생성해주세요.");
+            responseDto.setStatusCode(402);
+            return responseDto;
+        }
+
+        int performanceId = Integer.parseInt(enterInputDto.getPerformId());
+        int seatNum = Integer.parseInt(enterInputDto.getSeatNum());
         String key = "seatStatus::" + performanceId;
         ListOperations listOperations = redisTemplate.opsForList();
         Performance perform = performanceRepository.findById(performanceId);
+
         if(listOperations.size(key) == 0){
             List<Seat> seats = seatRepository.findByPerformanceId(performanceId);
             for(int i=0; i<seats.size(); i++){
@@ -300,7 +319,7 @@ public class PerformanceService {
             EnterOutputDto enterOutputDto = EnterOutputDto.builder()
                     .seatNum(seatNum)
                     .nickname(enterInputDto.getNickname())
-                    .enterTime(nt)
+                    .enterTime(nt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .build();
 
             result.put("isSuccess", true);
@@ -335,7 +354,7 @@ public class PerformanceService {
         ArrayList<EnterOutputDto> output = new ArrayList<>();
         for (EnterLog enterLog : logList) {
             output.add(EnterOutputDto.builder()
-                            .enterTime(enterLog.getEnterTime())
+                            .enterTime(enterLog.getEnterTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                             .nickname(enterLog.getNickname())
                             .seatNum(enterLog.getSeatNum())
                             .build());

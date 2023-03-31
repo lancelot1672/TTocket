@@ -13,12 +13,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EnterOutputDto {
-    @JsonProperty("enter_time")
-    private LocalDateTime enterTime;
 
     @JsonProperty("seat_num")
     private int seatNum;
 
     @JsonProperty("nickname")
     private String nickname;
+
+    @JsonProperty("enter_time")
+    private String enterTime;
 }

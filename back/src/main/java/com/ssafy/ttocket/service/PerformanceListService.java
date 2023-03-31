@@ -76,7 +76,7 @@ public class PerformanceListService {
         //공연까지 몇분 남았는지 계산
         LocalDateTime nowTime = LocalDateTime.now();
         Duration duration = Duration.between(nowTime,endTime);
-        log.info("공연까지 남은 분 : ",duration.toMinutes());
+        log.debug("공연까지 남은 분 : " + duration.toMinutes());
         // responseDto
         result.put("performance_id", performance.getId());
         result.put("left_minute_perform",duration.toMinutes());
