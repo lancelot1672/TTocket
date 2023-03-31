@@ -2,6 +2,7 @@ package com.ssafy.ttocket.service;
 
 import com.ssafy.ttocket.domain.*;
 import com.ssafy.ttocket.dto.EnterInputDto;
+import com.ssafy.ttocket.dto.EnterOutputDto;
 import com.ssafy.ttocket.dto.PerformanceDto;
 import com.ssafy.ttocket.dto.ResponseDto;
 import com.ssafy.ttocket.repository.*;
@@ -294,8 +295,6 @@ public class PerformanceService {
                     .nickname(enterInputDto.getNickname())
                     .performance(perform)
                     .build();
-
-            System.out.println(enterLog.toString());
             enterLogRepository.save(enterLog);
             result.put("isSuccess", true);
             responseDto.setMessage(performanceId+"번 공연 "+ seatNum+ "번 좌석 PERFORM_ENTER으로 변경 완료");
@@ -322,9 +321,17 @@ public class PerformanceService {
         ResponseDto responseDto = new ResponseDto();
         List<EnterLog> logList = enterLogRepository.findByPerformanceId(performanceId);
         Performance perform = performanceRepository.findById(performanceId);
-        result.put("enter_log_list", logList);
+        ArrayList<EnterOutputDto> output = new ArrayList<>();
+        for (EnterLog enterLog : logList) {
+            output.add(EnterOutputDto.builder()
+                            .enterTime(enterLog.getEnterTime())
+                            .nickname(enterLog.getNickname())
+                            .seatNum(enterLog.getSeatNum())
+                            .build());
+        }
+        result.put("enter_log_list", output);
         result.put("max_seat",perform.getMax_seats());
-        result.put("enter_cnt",logList.size());
+        result.put("enter_cnt",output.size());
         responseDto.setBody(result);
         responseDto.setMessage("공연 입장 로그 목록 리턴");
         responseDto.setStatusCode(200);
