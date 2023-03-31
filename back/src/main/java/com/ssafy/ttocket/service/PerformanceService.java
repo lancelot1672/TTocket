@@ -289,14 +289,23 @@ public class PerformanceService {
         if(status.equals(String.valueOf(SeatStatus.RESERVED))){
             listOperations.set(key,seatNum - 1,String.valueOf(SeatStatus.PERFORM_ENTER));
             log.debug(performanceId+"번 공연 "+ seatNum+ "번 좌석 PERFORM_ENTER으로 변경 완료");
+            LocalDateTime nt = LocalDateTime.now();
             EnterLog enterLog = EnterLog.builder()
-                    .enterTime(LocalDateTime.now())
+                    .enterTime(nt)
                     .seatNum(seatNum)
                     .nickname(enterInputDto.getNickname())
                     .performance(perform)
                     .build();
             enterLogRepository.save(enterLog);
+            EnterOutputDto enterOutputDto = EnterOutputDto.builder()
+                    .seatNum(seatNum)
+                    .nickname(enterInputDto.getNickname())
+                    .enterTime(nt)
+                    .build();
+
             result.put("isSuccess", true);
+            result.put("enter_log",enterOutputDto);
+            responseDto.setBody(result);
             responseDto.setMessage(performanceId+"번 공연 "+ seatNum+ "번 좌석 PERFORM_ENTER으로 변경 완료");
             responseDto.setStatusCode(200);
             return responseDto;
@@ -304,6 +313,7 @@ public class PerformanceService {
         else if(status.equals(String.valueOf(SeatStatus.PERFORM_ENTER))){
             log.debug("***이미 입장한 티켓 입장 요청***");
             result.put("isSuccess", false);
+            responseDto.setBody(result);
             responseDto.setMessage("이미 입장 처리된 티켓입니다.");
             responseDto.setStatusCode(401);
             return responseDto;
@@ -311,6 +321,7 @@ public class PerformanceService {
         else{
             log.debug("***RESERVED 아닌 티켓 입장 요청***");
             result.put("isSuccess", false);
+            responseDto.setBody(result);
             responseDto.setMessage("구매 완료된 티켓이 아닙니다.");
             responseDto.setStatusCode(400);
             return responseDto;
