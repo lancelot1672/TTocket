@@ -6,7 +6,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # Mysql Settings
-    url: jdbc:mysql://3.38.250.25:3306/ttocket?serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://3.38.250.25:3306/ttocket?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: ttocket
     password: '!23Qwe'
 

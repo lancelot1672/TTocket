@@ -38,8 +38,13 @@ public class PerformanceListService {
         // String -> Date
         String startTimeStr = performanceDto.getStartTime();
         String endTimeStr = performanceDto.getEndTime();
+
         LocalDateTime startTime = timeService.StringToLocalDateTime(startTimeStr);
         LocalDateTime endTime = timeService.StringToLocalDateTime(endTimeStr);
+
+        log.debug("예매 시작 시간 :"+ String.valueOf(startTime));
+        log.debug("공연 시작 시간 :" + String.valueOf(endTime));
+
         Optional<User> byId = userRepository.findById(performanceDto.getUserId());
         if (byId.isEmpty()) {
             responseDto.setStatusCode(400);
