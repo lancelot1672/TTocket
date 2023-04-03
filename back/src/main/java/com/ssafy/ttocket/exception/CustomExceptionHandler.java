@@ -1,14 +1,12 @@
 package com.ssafy.ttocket.exception;
 
 import lombok.Data;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.QueryTimeoutException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +18,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @Autowired
     private NotificationManager notificationManager;
 
-    // Exception handling code goes here
     @ExceptionHandler(QueryTimeoutException.class)
     public ResponseEntity<Object> handleQueryTimeoutException(QueryTimeoutException ex, HttpServletRequest request) {
         String errorMessage = "Redis query timed out";

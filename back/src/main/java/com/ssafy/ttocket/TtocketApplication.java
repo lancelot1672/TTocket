@@ -11,5 +11,4 @@ public class TtocketApplication {
 		SpringApplication.run(TtocketApplication.class, args);
 	}
 
-
 }

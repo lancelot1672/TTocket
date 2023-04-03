@@ -1,8 +1,6 @@
 package com.ssafy.ttocket.service;
 
-import com.querydsl.core.types.dsl.EnumPath;
 import com.ssafy.ttocket.domain.Seat;
-import com.ssafy.ttocket.domain.SeatId;
 import com.ssafy.ttocket.domain.SeatStatus;
 import com.ssafy.ttocket.repository.SeatRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +11,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.ObjectError;
 
 import java.util.List;
 import java.util.Set;

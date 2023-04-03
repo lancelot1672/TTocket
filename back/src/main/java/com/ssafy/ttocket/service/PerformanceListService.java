@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.*;
 
 @Service
@@ -35,16 +34,16 @@ public class PerformanceListService {
     public ResponseDto createPerformance(PerformanceDto performanceDto) {
         Map<String, Object> result = new HashMap<>();
         ResponseDto responseDto = new ResponseDto();
-        // String -> Date
+
+        // startTime, endTime 데이터 타입 변환: String -> LocalDateTime
         String startTimeStr = performanceDto.getStartTime();
         String endTimeStr = performanceDto.getEndTime();
-
         LocalDateTime startTime = timeService.StringToLocalDateTime(startTimeStr);
         LocalDateTime endTime = timeService.StringToLocalDateTime(endTimeStr);
-
-        log.debug("예매 시작 시간 :"+ String.valueOf(startTime));
+        log.debug("예매 시작 시간 :" + String.valueOf(startTime));
         log.debug("공연 시작 시간 :" + String.valueOf(endTime));
 
+        // user 정보 조회
         Optional<User> byId = userRepository.findById(performanceDto.getUserId());
         if (byId.isEmpty()) {
             responseDto.setStatusCode(400);
@@ -52,7 +51,8 @@ public class PerformanceListService {
             return responseDto;
         }
         User user = byId.get();
-        // DB
+
+        // performance 객체 생성 후 저장
         Performance performance = Performance.builder()
                 .title(performanceDto.getTitle())
                 .user(user)
@@ -65,6 +65,7 @@ public class PerformanceListService {
                 .etc(performanceDto.getEtc())
                 .price(performanceDto.getPrice())
                 .build();
+
         performanceRepository.save(performance);
 
         // 빈 좌석 만들기
@@ -78,10 +79,12 @@ public class PerformanceListService {
                     .build();
             seatRepository.save(seat);
         }
+
         //공연까지 몇분 남았는지 계산
         LocalDateTime nowTime = LocalDateTime.now();
         Duration duration = Duration.between(nowTime,endTime);
         log.debug("공연까지 남은 분 : " + duration.toMinutes());
+
         // responseDto
         result.put("performance_id", performance.getId());
         result.put("left_minute_perform",duration.toMinutes());
@@ -97,10 +100,11 @@ public class PerformanceListService {
         ResponseDto responseDto = new ResponseDto();
 
         // DB에서 원하는 데이터 찾아오기
-        List<Performance> openSoon = performanceRepository.findOpenSoon();  // 오픈 예정 : 상단 배너
+        List<Performance> openSoon = performanceRepository.findOpenSoon();  // 오픈 예정: 상단 배너
         List<Performance> performSoon = performanceRepository.findPerformSoon();  // 공연 임박 리스트
         List<PerformanceLike> likePerform = performanceLikeRepository.findFirstListByUserId(userId);  // 유저가 좋아요 한 공연 리스트
 
+        // user(id, nickname) 정보 조회, 예외처리
         Optional<User> byId = userRepository.findById(userId);
         if(byId.isEmpty()){
             responseDto.setStatusCode(400);
@@ -128,6 +132,7 @@ public class PerformanceListService {
                     .endTime(String.valueOf(lp.getPerformance().getEndTime()))
                     .maxSeats(lp.getPerformance().getMax_seats())
                     .build();
+
             likePerforms.add(performanceDto);
         }
         for (Performance p : openSoon) {
@@ -144,6 +149,7 @@ public class PerformanceListService {
                     .endTime(String.valueOf(p.getEndTime()))
                     .maxSeats(p.getMax_seats())
                     .build();
+
             openSoonPerforms.add(performanceDto);
         }
         for (Performance p : performSoon) {
@@ -160,8 +166,10 @@ public class PerformanceListService {
                     .endTime(String.valueOf(p.getEndTime()))
                     .maxSeats(p.getMax_seats())
                     .build();
+
             commingSoonPerforms.add(performanceDto);
         }
+
         // 찾은 데이터 result에 입력
         result.put("user_nickname", nickname);
         result.put("open_soon", openSoonPerforms);
@@ -232,7 +240,6 @@ public class PerformanceListService {
                     .desc(p.getPerformance().getDescription())
                     .maxSeats(p.getPerformance().getMax_seats())
                     .build();
-
 
             userlikeDtoList.add(performanceDto);
         }

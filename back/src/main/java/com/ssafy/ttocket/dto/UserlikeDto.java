@@ -5,8 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
-
 @Schema(description = "유저 좋아요 DTO")
 @Data
 @Builder

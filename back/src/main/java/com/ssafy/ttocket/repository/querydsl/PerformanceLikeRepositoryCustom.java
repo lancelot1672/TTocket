@@ -1,6 +1,5 @@
 package com.ssafy.ttocket.repository.querydsl;
 
-import com.ssafy.ttocket.domain.Performance;
 import com.ssafy.ttocket.domain.PerformanceLike;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

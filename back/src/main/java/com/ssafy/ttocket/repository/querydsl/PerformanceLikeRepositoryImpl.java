@@ -3,8 +3,6 @@ package com.ssafy.ttocket.repository.querydsl;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.ttocket.domain.PerformanceLike;
 import com.ssafy.ttocket.domain.QPerformanceLike;
-import com.ssafy.ttocket.domain.QUser;
-import com.ssafy.ttocket.repository.PerformanceLikeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

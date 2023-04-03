@@ -1,20 +1,14 @@
 package com.ssafy.ttocket.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ssafy.ttocket.domain.User;
-import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import java.time.LocalDate;
 
 @Schema(description = "공연 DTO")
 @AllArgsConstructor

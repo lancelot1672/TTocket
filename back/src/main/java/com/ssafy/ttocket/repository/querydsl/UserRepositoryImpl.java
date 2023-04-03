@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 
 import javax.persistence.EntityManager;
 
-import static com.ssafy.ttocket.domain.QUser.user;
-
 public class UserRepositoryImpl extends QuerydslRepositorySupport {
 
     private final JPAQueryFactory queryFactory;
