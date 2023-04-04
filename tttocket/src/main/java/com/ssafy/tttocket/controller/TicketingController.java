@@ -31,7 +31,7 @@ public class TicketingController {
         sendingOperations.convertAndSend("/sub/chat/perform/"+waitQueEnterDto.getPerformId() ,returnData);
     }
 
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = 15000)
     public void QuePoll(){
         log.info("앙 실행");
         Set<String> redisKeys = redisTemplate.keys("WaitQue*");
@@ -39,6 +39,17 @@ public class TicketingController {
         while (it.hasNext()) {
             String key = it.next();
             log.info("now key :"+ key);
+            if(redisTemplate.opsForList().size(key) <= popAmount){
+                int performId = Integer.parseInt(key.split("::")[1]);
+                Map<String,Object> result = new HashMap<>();
+                result.put("isMyTurn",true);
+                result.put("myOrder",0);
+                sendingOperations.convertAndSend("/sub/chat/perform/"+performId ,result);
+                while(redisTemplate.opsForList().size(key) > 0){
+                    redisTemplate.opsForList().leftPop(key);
+                }
+                return;
+            }
             List waitQue = redisTemplate.opsForList().range(key, 0, -1);
             int idx = 0;
             for (Object o : waitQue) {
@@ -46,7 +57,8 @@ public class TicketingController {
                 if(idx >= popAmount){ //이번 차례 아닌 놈들
                     Map<String,Object> result = new HashMap<>();
                     result.put("isMyTurn",false);
-                    result.put("myOrder",idx-popAmount-1);
+                    result.put("myOrder",idx-popAmount);
+                    result.put("que_size",redisTemplate.opsForList().size(key));
                     sendingOperations.convertAndSend("/sub/id/" + o.toString() ,result);
                 }
                 else{ //이번 차례인놈들!
