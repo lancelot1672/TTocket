@@ -20,7 +20,7 @@ public class TicketingService {
         StringBuilder sb = new StringBuilder("WaitQue::");
         String key = "WaitQue::"+performId;
         sb.append(performId);
-        log.info("add key ->"+ sb.toString());
+        log.info("add key ------------------>"+ sb.toString());
 
         ListOperations<String, Object> listOperations = redisTemplate.opsForList();
         listOperations.rightPush(sb.toString(),userId); // 넣을때는 rightPush 뺄때는 leftPop

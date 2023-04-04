@@ -46,7 +46,7 @@ public class TicketingController {
                 if(idx >= popAmount){ //이번 차례 아닌 놈들
                     Map<String,Object> result = new HashMap<>();
                     result.put("isMyTurn",false);
-                    result.put("myOrder",idx-9);
+                    result.put("myOrder",idx-popAmount-1);
                     sendingOperations.convertAndSend("/sub/id/" + o.toString() ,result);
                 }
                 else{ //이번 차례인놈들!
