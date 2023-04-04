@@ -118,57 +118,58 @@ public class PerformanceListService {
         List<PerformanceDto> openSoonPerforms = new ArrayList<>();
         List<PerformanceDto> commingSoonPerforms = new ArrayList<>();
 
-        for (PerformanceLike lp : likePerform) {
+        likePerform.forEach(performanceLike -> {
             PerformanceDto performanceDto = PerformanceDto.builder()
-                    .title(lp.getPerformance().getTitle())
-                    .location(lp.getPerformance().getLocation())
-                    .price(lp.getPerformance().getPrice())
-                    .desc(lp.getPerformance().getDescription())
-                    .etc(lp.getPerformance().getEtc())
-                    .poster(lp.getPerformance().getPoster())
-                    .id(lp.getPerformance().getId())
-                    .userId(lp.getPerformance().getUser().getId())
-                    .startTime(String.valueOf(lp.getPerformance().getStartTime()))
-                    .endTime(String.valueOf(lp.getPerformance().getEndTime()))
-                    .maxSeats(lp.getPerformance().getMax_seats())
+                    .title(performanceLike.getPerformance().getTitle())
+                    .location(performanceLike.getPerformance().getLocation())
+                    .price(performanceLike.getPerformance().getPrice())
+                    .desc(performanceLike.getPerformance().getDescription())
+                    .etc(performanceLike.getPerformance().getEtc())
+                    .poster(performanceLike.getPerformance().getPoster())
+                    .id(performanceLike.getPerformance().getId())
+                    .userId(performanceLike.getPerformance().getUser().getId())
+                    .startTime(String.valueOf(performanceLike.getPerformance().getStartTime()))
+                    .endTime(String.valueOf(performanceLike.getPerformance().getEndTime()))
+                    .maxSeats(performanceLike.getPerformance().getMax_seats())
                     .build();
 
             likePerforms.add(performanceDto);
-        }
-        for (Performance p : openSoon) {
+        });
+        openSoon.forEach(performance -> {
             PerformanceDto performanceDto = PerformanceDto.builder()
-                    .title(p.getTitle())
-                    .location(p.getLocation())
-                    .price(p.getPrice())
-                    .desc(p.getDescription())
-                    .etc(p.getEtc())
-                    .poster(p.getPoster())
-                    .id(p.getId())
-                    .userId(p.getUser().getId())
-                    .startTime(String.valueOf(p.getStartTime()))
-                    .endTime(String.valueOf(p.getEndTime()))
-                    .maxSeats(p.getMax_seats())
+                    .title(performance.getTitle())
+                    .location(performance.getLocation())
+                    .price(performance.getPrice())
+                    .desc(performance.getDescription())
+                    .etc(performance.getEtc())
+                    .poster(performance.getPoster())
+                    .id(performance.getId())
+                    .userId(performance.getUser().getId())
+                    .startTime(String.valueOf(performance.getStartTime()))
+                    .endTime(String.valueOf(performance.getEndTime()))
+                    .maxSeats(performance.getMax_seats())
                     .build();
 
             openSoonPerforms.add(performanceDto);
-        }
-        for (Performance p : performSoon) {
+        });
+
+        performSoon.forEach(performance -> {
             PerformanceDto performanceDto = PerformanceDto.builder()
-                    .title(p.getTitle())
-                    .location(p.getLocation())
-                    .price(p.getPrice())
-                    .desc(p.getDescription())
-                    .etc(p.getEtc())
-                    .poster(p.getPoster())
-                    .id(p.getId())
-                    .userId(p.getUser().getId())
-                    .startTime(String.valueOf(p.getStartTime()))
-                    .endTime(String.valueOf(p.getEndTime()))
-                    .maxSeats(p.getMax_seats())
+                    .title(performance.getTitle())
+                    .location(performance.getLocation())
+                    .price(performance.getPrice())
+                    .desc(performance.getDescription())
+                    .etc(performance.getEtc())
+                    .poster(performance.getPoster())
+                    .id(performance.getId())
+                    .userId(performance.getUser().getId())
+                    .startTime(String.valueOf(performance.getStartTime()))
+                    .endTime(String.valueOf(performance.getEndTime()))
+                    .maxSeats(performance.getMax_seats())
                     .build();
 
             commingSoonPerforms.add(performanceDto);
-        }
+        });
 
         // 찾은 데이터 result에 입력
         result.put("user_nickname", nickname);
@@ -192,23 +193,23 @@ public class PerformanceListService {
         List<PerformanceDto> performanceDtoList = new ArrayList<>();
 
         // DTO 변환
-        for (Performance p : performanceList) {
+        performanceList.forEach(performance -> {
             PerformanceDto performanceDto = PerformanceDto.builder()
-                    .id(p.getId())
-                    .userId(String.valueOf(p.getUser()))
-                    .title(p.getTitle())
-                    .startTime(String.valueOf(p.getStartTime()))
-                    .endTime(String.valueOf(p.getEndTime()))
-                    .location(p.getLocation())
-                    .price(p.getPrice())
-                    .maxSeats(p.getMax_seats())
-                    .desc(p.getDescription())
-                    .poster(p.getPoster())
-                    .etc(p.getEtc())
+                    .id(performance.getId())
+                    .userId(String.valueOf(performance.getUser()))
+                    .title(performance.getTitle())
+                    .startTime(String.valueOf(performance.getStartTime()))
+                    .endTime(String.valueOf(performance.getEndTime()))
+                    .location(performance.getLocation())
+                    .price(performance.getPrice())
+                    .maxSeats(performance.getMax_seats())
+                    .desc(performance.getDescription())
+                    .poster(performance.getPoster())
+                    .etc(performance.getEtc())
                     .build();
 
             performanceDtoList.add(performanceDto);
-        }
+        });
 
         // 반환 값 설정
         result.put("cursor_id", cursorId);
@@ -227,22 +228,22 @@ public class PerformanceListService {
         Page<PerformanceLike> userlikePage = performanceLikeRepository.findByCustom_cursorPaging(pageable, cursorId, userId);
         List<PerformanceDto> userlikeDtoList = new ArrayList<>();
 
-        for (PerformanceLike p : userlikePage) {
+        userlikePage.forEach(performanceLike -> {
             PerformanceDto performanceDto = PerformanceDto.builder()
-                    .id(p.getPerformance().getId())
-                    .title(p.getPerformance().getTitle())
-                    .startTime(String.valueOf(p.getPerformance().getStartTime()))
-                    .location(p.getPerformance().getLocation())
-                    .price(p.getPerformance().getPrice())
-                    .endTime(String.valueOf(p.getPerformance().getEndTime()))
-                    .etc(p.getPerformance().getEtc())
-                    .poster(p.getPerformance().getPoster())
-                    .desc(p.getPerformance().getDescription())
-                    .maxSeats(p.getPerformance().getMax_seats())
+                    .id(performanceLike.getPerformance().getId())
+                    .title(performanceLike.getPerformance().getTitle())
+                    .startTime(String.valueOf(performanceLike.getPerformance().getStartTime()))
+                    .location(performanceLike.getPerformance().getLocation())
+                    .price(performanceLike.getPerformance().getPrice())
+                    .endTime(String.valueOf(performanceLike.getPerformance().getEndTime()))
+                    .etc(performanceLike.getPerformance().getEtc())
+                    .poster(performanceLike.getPerformance().getPoster())
+                    .desc(performanceLike.getPerformance().getDescription())
+                    .maxSeats(performanceLike.getPerformance().getMax_seats())
                     .build();
 
             userlikeDtoList.add(performanceDto);
-        }
+        });
 
         result.put("user_like_list", userlikeDtoList);
         responseDto.setMessage("유저의 찜 목록 데이터 리턴");

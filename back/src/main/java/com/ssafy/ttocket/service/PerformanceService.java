@@ -132,9 +132,7 @@ public class PerformanceService {
         // Redis에 좌석정보가 기록된 적이 없을 때, Redis에 좌석정보 기록
         if(listOperations.size(key) == 0){
             List<Seat> seats = seatRepository.findByPerformanceId(performanceId);
-            for (Seat seat : seats) {
-                listOperations.rightPush(key, String.valueOf(seat.getStatus()));
-            }
+            seats.forEach(seat -> listOperations.rightPush(key, String.valueOf(seat.getStatus())));
         }
 
         List range = listOperations.range(key, 0, -1);
@@ -358,13 +356,11 @@ public class PerformanceService {
         List<EnterLog> logList = enterLogRepository.findByPerformanceId(performanceId);
         Performance perform = performanceRepository.findById(performanceId);
         ArrayList<EnterOutputDto> output = new ArrayList<>();
-        for (EnterLog enterLog : logList) {
-            output.add(EnterOutputDto.builder()
+        logList.forEach(enterLog -> output.add(EnterOutputDto.builder()
                             .enterTime(enterLog.getEnterTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                             .nickname(enterLog.getNickname())
                             .seatNum(enterLog.getSeatNum())
-                            .build());
-        }
+                            .build()));
         result.put("enter_log_list", output);
         result.put("max_seat",perform.getMax_seats());
         result.put("enter_cnt",output.size());

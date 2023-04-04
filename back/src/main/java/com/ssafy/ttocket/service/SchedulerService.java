@@ -52,7 +52,7 @@ public class SchedulerService {
         // 클래스 나눠서 시간대를 길게 매서드
         // 람다식 적용 방법 찾아서 적용하기
         Set<String> keys = redisTemplate.keys("seatStatus::*");
-        for (String key : keys) {
+        keys.forEach(key -> {
             String keyIdx = key.substring(12);  // performanceId 추출
             if (!redisTemplate.type(key).equals(DataType.NONE)) {
                 List<Seat> targetSeats = seatRepository.findByPerformanceId(Integer.parseInt(keyIdx));  // 좌석 정보를 가져오기 위해 repository 탐색
@@ -69,7 +69,7 @@ public class SchedulerService {
             } else {
                 log.debug("리스트 타입이 아님");
             }
-        }
+        });
     }
     
 }
