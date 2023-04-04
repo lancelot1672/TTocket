@@ -38,6 +38,7 @@ public class TicketingController {
         Iterator<String> it = redisKeys.iterator();
         while (it.hasNext()) {
             String key = it.next();
+            log.info("now key :"+ key);
             List waitQue = redisTemplate.opsForList().range(key, 0, -1);
             int idx = 0;
             for (Object o : waitQue) {
