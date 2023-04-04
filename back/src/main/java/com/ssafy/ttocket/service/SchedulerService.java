@@ -22,10 +22,10 @@ public class SchedulerService {
     private final RedisTemplate redisTemplate;
     private final SeatRepository seatRepository;
 
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = 60000)
     @Transactional
     public void changeSeatsStatus() {
-        log.debug("CanceledSeat 반영 : 30초");
+        log.debug("CanceledSeat 반영 : 1분");
         ListOperations listOperations = redisTemplate.opsForList();
 
         //==취소 표를 레디스 canceledList에 등록, 스케줄러 실행 시에 MySQL 정보 업데이트==//
@@ -44,10 +44,10 @@ public class SchedulerService {
         redisTemplate.delete(canceledList);
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 3600000)
     @Transactional
     public void backUpToRDB() {
-        log.debug("Cache -> RDB BackUp : 1분");
+        log.debug("Cache -> RDB BackUp : 60분");
         ListOperations listOperations = redisTemplate.opsForList();
         // 클래스 나눠서 시간대를 길게 매서드
         // 람다식 적용 방법 찾아서 적용하기

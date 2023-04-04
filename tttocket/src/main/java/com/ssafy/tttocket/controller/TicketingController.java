@@ -25,7 +25,7 @@ public class TicketingController {
 
     @MessageMapping(value = "/chat/enter")
     public void enter(@RequestBody WaitQueEnterDto waitQueEnterDto){
-        log.info("userId : "+waitQueEnterDto.getUserId() +",  performId : "+ waitQueEnterDto.getPerformId());
+        log.info("유저 대기열 큐 입장 "+"userId : "+waitQueEnterDto.getUserId() +",  performId : "+ waitQueEnterDto.getPerformId());
         // 해당 유저를 해당 공연 대기큐에 추가
         Map<String, Object> returnData = ticketingService.addToWaitQue(waitQueEnterDto.getUserId(), waitQueEnterDto.getPerformId());
         sendingOperations.convertAndSend("/sub/chat/perform/"+waitQueEnterDto.getPerformId() ,returnData);
@@ -33,7 +33,7 @@ public class TicketingController {
 
     @Scheduled(fixedRate = 15000)
     public void QuePoll(){
-        log.info("앙 실행");
+        log.info("공연 대기열 관리 스케줄링 시작");
         Set<String> redisKeys = redisTemplate.keys("WaitQue*");
         Iterator<String> it = redisKeys.iterator();
         while (it.hasNext()) {
@@ -48,6 +48,7 @@ public class TicketingController {
                 while(redisTemplate.opsForList().size(key) > 0){
                     redisTemplate.opsForList().leftPop(key);
                 }
+                log.info("공연 대기열 관리 스케줄링 종료");
                 return;
             }
             List waitQue = redisTemplate.opsForList().range(key, 0, -1);
@@ -71,5 +72,6 @@ public class TicketingController {
                 idx++;
             }
         }
+        log.info("공연 대기열 관리 스케줄링 종료");
     }
 }
