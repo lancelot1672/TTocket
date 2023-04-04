@@ -27,7 +27,6 @@ public class Seat implements Serializable {
     private int seatNo;
 
 
-
     @NotNull
     @ColumnDefault("'EMPTY'")
     @Enumerated(EnumType.STRING)

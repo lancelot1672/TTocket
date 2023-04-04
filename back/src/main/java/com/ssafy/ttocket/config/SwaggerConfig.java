@@ -32,7 +32,7 @@ public class SwaggerConfig extends ResponseEntityExceptionHandler implements Web
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("TTOCKET") // Swagger UI에서 대표 Title을 설정합니다.
+                .title("똑똑한 블록체인 티켓팅, TTOCKET") // Swagger UI에서 대표 Title을 설정합니다.
                 .description("TTOCKET API Documentation") // Swagger UI에서 대표 설명을 설정합니다.
                 .version("1.0") // Swagger UI에서 API의 버전 정보를 설정합니다.
                 .build();

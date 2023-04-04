@@ -4,7 +4,6 @@ import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,6 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Performance {
 
     @Id
@@ -24,7 +24,7 @@ public class Performance {
     @Column(name="performance_title")
     private String title;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)  // LAZY에서 EARGER로 변경: home에서 likelist를 가져올 때 필요
     @JoinColumn(name="user_id")
     private User user;
 
@@ -56,6 +56,5 @@ public class Performance {
 
     @Column(name="performance_etc")
     private String etc;
-
 
 }

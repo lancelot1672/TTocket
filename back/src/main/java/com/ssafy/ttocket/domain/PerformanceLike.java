@@ -1,7 +1,6 @@
 package com.ssafy.ttocket.domain;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -27,7 +26,7 @@ public class PerformanceLike implements Serializable {
     @MapsId("userId")
     private User user;
 
-    @Column(name="is_like", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @Column(name="is_like", columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isLike;
 
 }

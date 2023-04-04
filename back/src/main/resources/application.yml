@@ -1,31 +1,37 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /ttocket
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # Mysql Settings
-    url: jdbc:mysql://localhost:3306/ttocket?serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://3.38.250.25:3306/ttocket?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: ttocket
-    password: '1Q2w3e4r,'
+    password: '!23Qwe'
+
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    open-in-view: false
-    show-sql: true
     hibernate:
-      ddl-auto: create-drop
-      use-new-id-generator-mappings: false
+      ddl-auto: update
     properties:
       hibernate:
           format_sql: true
-
+          default_batch_fetch_size: 1000
+  redis:
+    host: 3.38.250.25
+    port: 6379
+    password: '13524'
 logging:
   level:
-    org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
-    com.ssafy.ttocket: debug
+    com.ssafy.ttocket: DEBUG
+
+notification:
+  mattermost:
+    enabled: true
+    webhook-url: https://meeting.ssafy.com/hooks/5b4zrggtx3y6ugjoo9b9wwggje
+    pretext: Spring 에서 Error 발생
+    author-name: TTocket
