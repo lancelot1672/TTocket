@@ -34,7 +34,7 @@ public class TicketingController {
     @Scheduled(fixedRate = 30000)
     public void QuePoll(){
         log.info("앙 실행");
-        Set<String> redisKeys = redisTemplate.keys("WaitQue*");
+        Set<String> redisKeys = redisTemplate.keys("*WaitQue*");
         Iterator<String> it = redisKeys.iterator();
         while (it.hasNext()) {
             String key = it.next();
