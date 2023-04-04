@@ -17,6 +17,8 @@ public class TicketingService {
     public Map<String,Object> addToWaitQue(String userId, int performId){
         Map<String,Object> result = new HashMap<>();
         String key = "WaitQue::"+performId;
+        log.info("key :", key);
+
         ListOperations<String, Object> listOperations = redisTemplate.opsForList();
         listOperations.rightPush(key,userId); // 넣을때는 rightPush 뺄때는 leftPop
         Long size = listOperations.size(key);
