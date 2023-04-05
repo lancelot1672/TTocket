@@ -21,7 +21,7 @@ public class TicketingController {
     private final SimpMessageSendingOperations sendingOperations;
     private final TicketingService ticketingService;
     private final RedisTemplate redisTemplate;
-    private static final int popAmount = 1;
+    private static final int popAmount = 10;
 
     @MessageMapping(value = "/chat/enter")
     public void enter(@RequestBody WaitQueEnterDto waitQueEnterDto){
