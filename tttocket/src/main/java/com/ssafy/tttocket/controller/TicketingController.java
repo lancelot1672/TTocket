@@ -21,7 +21,7 @@ public class TicketingController {
     private final SimpMessageSendingOperations sendingOperations;
     private final TicketingService ticketingService;
     private final RedisTemplate redisTemplate;
-    private static final int popAmount = 2;
+    private static final int popAmount = 1;
 
     @MessageMapping(value = "/chat/enter")
     public void enter(@RequestBody WaitQueEnterDto waitQueEnterDto){
@@ -31,7 +31,7 @@ public class TicketingController {
         sendingOperations.convertAndSend("/sub/chat/perform/"+waitQueEnterDto.getPerformId() ,returnData);
     }
 
-    @Scheduled(fixedRate = 15000)
+    @Scheduled(fixedRate = 1000)
     public void QuePoll(){
         log.info("공연 대기열 관리 스케줄링 시작");
         Set<String> redisKeys = redisTemplate.keys("WaitQue*");
