@@ -38,7 +38,7 @@ public class SchedulerService {
                 int seat_no = Integer.parseInt(canceledSeat.substring(canceledSeat.indexOf(":") + ":".length()));
 
                 String key = "seatStatus::" + performanceId;
-                listOperations.set(key, seat_no-1, SeatStatus.PURCHASED_CANCEL.toString());
+                listOperations.set(key, (long)seat_no-1, SeatStatus.PURCHASED_CANCEL.toString());
             }
         }
         redisTemplate.delete(canceledList);
