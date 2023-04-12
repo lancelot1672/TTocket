@@ -65,7 +65,7 @@ function ReserveWait (){
 
         return () =>{
             // 컴포넌트 사라질때
-            client.current?.disconnect();
+            // client.current?.disconnect();
         }
     },[location, navigator, performId]);
 

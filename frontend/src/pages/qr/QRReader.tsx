@@ -91,7 +91,7 @@ function QRReader (){
                                         <div key={index} className="flex w-full h-12 p-2 border-b-2 text-ttokGray">
                                             <span className='w-1/4 text-center'>{e.nickname}</span>
                                             <span className='w-1/4 text-center'>{e.seat_num}</span>
-                                            <span className='w-2/4 text-right'>{e.enter_time}</span>
+                                            <span className='w-2/4 text-right text-sm'>{e.enter_time}</span>
                                         </div>
                                     )
                                 })
