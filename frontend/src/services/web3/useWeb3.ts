@@ -24,7 +24,7 @@ const useWeb3 = () => {
     else {
         const getToken = (networkId: number) => {
             if (!web3) return;
-            const instance = new web3.eth.Contract(contractABI,  "0x97C2d7042A0c8CE66DeD8330223DA6df7b871939");
+            const instance = new web3.eth.Contract(contractABI,  "0x4ac15322B50ceb531a87e2e161fFE35f8f4ceF4D");
             setTokenContract(instance);
             };
         (async () => {
