@@ -33,12 +33,12 @@ public class TicketingController {
 
     @Scheduled(fixedRate = 1000)
     public void QuePoll(){
-        log.info("공연 대기열 관리 스케줄링 시작");
+        log.debug("공연 대기열 관리 스케줄링 시작");
         Set<String> redisKeys = redisTemplate.keys("WaitQue*");
         Iterator<String> it = redisKeys.iterator();
         while (it.hasNext()) {
             String key = it.next();
-            log.info("now key :"+ key);
+            log.debug("now key :"+ key);
             if(redisTemplate.opsForList().size(key) <= popAmount){
                 int performId = Integer.parseInt(key.split("::")[1]);
                 Map<String,Object> result = new HashMap<>();
@@ -54,7 +54,7 @@ public class TicketingController {
             List waitQue = redisTemplate.opsForList().range(key, 0, -1);
             int idx = 0;
             for (Object o : waitQue) {
-                log.info("Object o.toString : {}", o.toString());
+                log.debug("Object o.toString : {}", o.toString());
                 if(idx >= popAmount){ //이번 차례 아닌 놈들
                     Map<String,Object> result = new HashMap<>();
                     result.put("isMyTurn",false);
@@ -72,6 +72,6 @@ public class TicketingController {
                 idx++;
             }
         }
-        log.info("공연 대기열 관리 스케줄링 종료");
+        log.debug("공연 대기열 관리 스케줄링 종료");
     }
 }

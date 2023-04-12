@@ -5,7 +5,7 @@ server:
 
 spring:
   redis:
-    host: 3.38.250.25
+    host: 3.34.48.8
     port: 6379
     password: '13524'
 
