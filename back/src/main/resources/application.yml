@@ -6,7 +6,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # Mysql Settings
-    url: jdbc:mysql://3.38.250.25:3306/ttocket?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://3.34.48.8:3306/ttocket?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: ttocket
     password: '!23Qwe'
 
@@ -22,7 +22,7 @@ spring:
           format_sql: true
           default_batch_fetch_size: 1000
   redis:
-    host: 3.38.250.25
+    host: 3.34.48.8
     port: 6379
     password: '13524'
 logging:
