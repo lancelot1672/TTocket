@@ -1,5 +1,5 @@
 import { create } from "ipfs-http-client";
 
-const ipfsCreate = create({ url: "https://j8b210.p.ssafy.io" });
+const ipfsCreate = create({ url: "https://ttocket.site/ttocket" });
 
 export default ipfsCreate;
